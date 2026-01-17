@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String?
+  name      String?
+  createdAt DateTime @default(now())
+  purchases Purchase[]
+}
+
+model Artist {
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  password          String?
+  displayName       String
+  bio               String?
+  avatarUrl         String?
+  nostrPubkey       String?  @unique
+  lightningAddress  String?
+  createdAt         DateTime @default(now())
+  albums            Album[]
+}
+
+model Album {
+  id              Int      @id @default(autoincrement())
+  artistId        Int
+  artist          Artist   @relation(fields: [artistId], references: [id])
+  title           String
+  description     String?
+  coverImageUrl   String?
+  priceSats       Int
+  releaseDate     DateTime
+  nostrEventId    String?
+  createdAt       DateTime @default(now())
+  tracks          Track[]
+  purchases       Purchase[]
+}
+
+model Track {
+  id              Int      @id @default(autoincrement())
+  albumId         Int
+  album           Album    @relation(fields: [albumId], references: [id])
+  title           String
+  durationSeconds Int
+  audioUrl        String
+  trackNumber     Int
+  priceSats       Int?
+  nostrEventId    String?
+  createdAt       DateTime @default(now())
+}
+
+model Purchase {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  user         User     @relation(fields: [userId], references: [id])
+  albumId      Int
+  album        Album    @relation(fields: [albumId], references: [id])
+  paymentHash  String   @unique
+  amountSats   Int
+  purchasedAt  DateTime @default(now())
+}
