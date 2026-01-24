@@ -40,4 +40,28 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# prisma
 /src/generated/prisma
+
+# Database files
+*.db
+*.db-journal
+
+# Private keys (CRITICAL - NEVER commit!)
+*.nsec
+private-keys.txt
+secrets/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+.cache/
