@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { artistName, email, password, nostrPubkey, signedEvent } = body;
+    const { artistName, email, password, confirmPassword, nostrPubkey, signedEvent } = body;
 
     // Validate artist name
     if (!artistName) {
@@ -64,6 +64,22 @@ export async function POST(request) {
     if (!email || !password) {
       return NextResponse.json(
         { success: false, error: 'Email and password are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate password confirmation
+    if (password !== confirmPassword) {
+      return NextResponse.json(
+        { success: false, error: 'Passwords do not match' },
+        { status: 400 }
+      );
+    }
+
+    // Validate password length
+    if (password.length < 8) {
+      return NextResponse.json(
+        { success: false, error: 'Password must be at least 8 characters' },
         { status: 400 }
       );
     }
