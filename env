@@ -1,1 +1,2 @@
 DATABASE_URL="postgresql://postgres:J^DSf%vwy88a@localhost:5432/musicplatform"
+JWT_SECRET=muzap-super-secret-key-2026-change-this-in-production
