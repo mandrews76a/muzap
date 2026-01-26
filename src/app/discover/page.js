@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { Music, Search, Zap, Play, Clock, TrendingUp, Filter, X } from 'lucide-react';
 
