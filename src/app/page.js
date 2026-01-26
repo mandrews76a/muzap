@@ -9,16 +9,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Music className="w-8 h-8 text-purple-400" />
-            <h1 className="text-2xl font-bold">MusicStream</h1>
+            <h1 className="text-2xl font-bold">muzap</h1>
           </div>
           <nav className="flex gap-4">
             <Link href="/discover" className="hover:text-purple-400 transition">
               Discover
             </Link>
-            <Link href="/login" className="hover:text-purple-400 transition">
+            <Link href="/artist/login" className="hover:text-purple-400 transition">
               Login
             </Link>
-            <Link href="/signup" className="px-4 py-2 bg-purple-600 rounded-lg hover:bg-purple-700 transition">
+            <Link href="/artist/signup" className="px-4 py-2 bg-purple-600 rounded-lg hover:bg-purple-700 transition">
               Sign Up
             </Link>
           </nav>
