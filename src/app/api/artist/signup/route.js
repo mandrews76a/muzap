@@ -10,8 +10,11 @@ export async function POST(request) {
     const body = await request.json();
     const { artistName, email, password, confirmPassword, nostrPubkey, signedEvent } = body;
 
-    // Validate artist name
-    if (!artistName) {
+    // Use artistName as displayName
+    const displayName = artistName;
+
+    // Validate display name
+    if (!displayName) {
       return NextResponse.json(
         { success: false, error: 'Artist name is required' },
         { status: 400 }
@@ -37,7 +40,7 @@ export async function POST(request) {
       // Create artist with Nostr
       const artist = await prisma.artist.create({
         data: {
-          artistName,
+          displayName,
           nostrPubkey,
           email: `${nostrPubkey.slice(0, 16)}@nostr.local` // Dummy email for Nostr users
         }
@@ -54,7 +57,7 @@ export async function POST(request) {
         token,
         artist: {
           id: artist.id,
-          artistName: artist.artistName,
+          displayName: artist.displayName,
           nostrPubkey: artist.nostrPubkey
         }
       });
@@ -102,9 +105,9 @@ export async function POST(request) {
     // Create artist
     const artist = await prisma.artist.create({
       data: {
-        artistName,
+        displayName,
         email,
-        passwordHash
+        password: passwordHash
       }
     });
 
@@ -119,7 +122,7 @@ export async function POST(request) {
       token,
       artist: {
         id: artist.id,
-        artistName: artist.artistName,
+        displayName: artist.displayName,
         email: artist.email
       }
     });
