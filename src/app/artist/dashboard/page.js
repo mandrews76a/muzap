@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Music, Zap, Plus, Upload, Edit, Trash2, Eye, TrendingUp, DollarSign, Users, LogOut, Settings } from 'lucide-react';
+import { Music, Zap, Plus, Upload, Edit, Trash2, Eye, TrendingUp, DollarSign, LogOut } from 'lucide-react';
 
 export default function ArtistDashboard() {
   const router = useRouter();
@@ -30,7 +30,6 @@ export default function ArtistDashboard() {
   const loadDashboardData = async () => {
     setLoading(true);
     try {
-      // Get artist info from localStorage
       if (typeof window !== 'undefined') {
         const artistData = localStorage.getItem('artist');
         if (artistData) {
@@ -39,7 +38,6 @@ export default function ArtistDashboard() {
         
         const token = localStorage.getItem('token');
         
-        // Fetch artist's albums
         const response = await fetch('/api/artist/albums', {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -117,7 +115,7 @@ export default function ArtistDashboard() {
           releaseDate: '',
           coverImage: null
         });
-        loadDashboardData(); // Reload albums
+        loadDashboardData();
       }
     } catch (error) {
       console.error('Upload error:', error);
@@ -140,7 +138,7 @@ export default function ArtistDashboard() {
       const data = await response.json();
 
       if (data.success) {
-        loadDashboardData(); // Reload albums
+        loadDashboardData();
       }
     } catch (error) {
       console.error('Delete error:', error);
@@ -160,7 +158,6 @@ export default function ArtistDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-black text-white">
-      {/* Header */}
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -192,7 +189,6 @@ export default function ArtistDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">
             Welcome back, {artist?.displayName || 'Artist'}!
@@ -200,7 +196,6 @@ export default function ArtistDashboard() {
           <p className="text-gray-400">Manage your music and track your earnings</p>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10">
             <div className="flex items-center justify-between mb-4">
@@ -237,7 +232,6 @@ export default function ArtistDashboard() {
           </div>
         </div>
 
-        {/* Albums Section */}
         <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Your Albums</h2>
@@ -270,7 +264,6 @@ export default function ArtistDashboard() {
                   key={album.id}
                   className="bg-white/5 rounded-xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all group"
                 >
-                  {/* Album Cover */}
                   <div className="aspect-square bg-gradient-to-br from-purple-600/20 to-blue-600/20 relative">
                     {album.coverUrl ? (
                       <img
@@ -285,7 +278,6 @@ export default function ArtistDashboard() {
                     )}
                   </div>
 
-                  {/* Album Info */}
                   <div className="p-4">
                     <h3 className="font-bold text-lg mb-1 truncate">{album.title}</h3>
                     <p className="text-gray-400 text-sm mb-3">{album.genre}</p>
@@ -300,7 +292,6 @@ export default function ArtistDashboard() {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex gap-2">
                       <button
                         onClick={() => router.push(`/album/${album.id}`)}
@@ -331,14 +322,12 @@ export default function ArtistDashboard() {
         </div>
       </main>
 
-      {/* Upload Modal */}
       {showUploadModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-gradient-to-br from-purple-900/90 to-blue-900/90 rounded-2xl p-8 max-w-2xl w-full border border-white/20 max-h-[90vh] overflow-y-auto">
             <h3 className="text-3xl font-bold mb-6">Upload New Album</h3>
             
             <div className="space-y-4">
-              {/* Album Title */}
               <div>
                 <label className="block text-sm font-medium mb-2">Album Title</label>
                 <input
@@ -351,7 +340,6 @@ export default function ArtistDashboard() {
                 />
               </div>
 
-              {/* Genre */}
               <div>
                 <label className="block text-sm font-medium mb-2">Genre</label>
                 <select
@@ -371,7 +359,6 @@ export default function ArtistDashboard() {
                 </select>
               </div>
 
-              {/* Price */}
               <div>
                 <label className="block text-sm font-medium mb-2">Price (in sats)</label>
                 <div className="relative">
@@ -387,7 +374,6 @@ export default function ArtistDashboard() {
                 </div>
               </div>
 
-              {/* Description */}
               <div>
                 <label className="block text-sm font-medium mb-2">Description</label>
                 <textarea
@@ -400,7 +386,6 @@ export default function ArtistDashboard() {
                 />
               </div>
 
-              {/* Release Date */}
               <div>
                 <label className="block text-sm font-medium mb-2">Release Date</label>
                 <input
@@ -412,9 +397,47 @@ export default function ArtistDashboard() {
                 />
               </div>
 
-              {/* Cover Image */}
               <div>
                 <label className="block text-sm font-medium mb-2">Cover Image</label>
                 <div className="border-2 border-dashed border-white/10 rounded-lg p-6 text-center hover:border-purple-500/50 transition">
                   <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="t
+                  <p className="text-sm text-gray-400 mb-2">
+                    {uploadForm.coverImage ? uploadForm.coverImage.name : 'Click to upload or drag and drop'}
+                  </p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="coverImage"
+                  />
+                  <label
+                    htmlFor="coverImage"
+                    className="text-purple-400 hover:text-purple-300 cursor-pointer text-sm"
+                  >
+                    Choose File
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={() => setShowUploadModal(false)}
+                className="flex-1 bg-white/5 hover:bg-white/10 text-white py-3 rounded-lg transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUploadAlbum}
+                className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 rounded-lg transition"
+              >
+                Upload Album
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
