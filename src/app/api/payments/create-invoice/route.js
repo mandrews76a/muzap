@@ -28,7 +28,7 @@ export async function POST(request) {
     }
 
     // TODO: Implement actual Alby Lightning invoice creation
-    // For now, create a mock invoice
+    // For now, create a mock invoice and simulate payment
     
     const invoice = {
       paymentRequest: 'lnbc' + Math.random().toString(36).substring(2, 15),
@@ -37,24 +37,16 @@ export async function POST(request) {
       expiresAt: new Date(Date.now() + 15 * 60 * 1000) // 15 minutes
     };
 
-    // Store pending purchase in database
-    const purchase = await prisma.purchase.create({
-      data: {
-        userId: 1, // Mock user ID - in production, get from auth token
-        albumId: album.id,
-        paymentHash: invoice.paymentHash,
-        amountSats: amountInSats,
-        purchasedAt: new Date()
-      }
-    });
+    // For mock payment, we'll skip storing in database for now
+    // In production with real Lightning, you'd store the pending payment
+    // and verify it before marking as purchased
 
     return NextResponse.json({
       success: true,
       invoice: {
         paymentRequest: invoice.paymentRequest,
         paymentHash: invoice.paymentHash,
-        amount: amountInSats,
-        purchaseId: purchase.id
+        amount: amountInSats
       }
     });
 
