@@ -47,18 +47,18 @@ export async function GET(request) {
         return sum + (album.priceSats * album._count.purchases);
       }, 0),
       totalSales: albums.reduce((sum, album) => sum + album._count.purchases, 0),
-      totalStreams: albums.reduce((sum, album) => sum + (album.plays || 0), 0)
+      totalStreams: 0 // No plays field in schema
     };
 
     // Format albums for response
     const formattedAlbums = albums.map(album => ({
       id: album.id,
       title: album.title,
-      genre: album.genre,
+      genre: album.genre || 'Unknown',
       priceInSats: album.priceSats,
-      coverUrl: album.coverUrl,
+      coverUrl: album.coverImageUrl,
       sales: album._count.purchases,
-      plays: album.plays || 0,
+      plays: 0,
       createdAt: album.createdAt
     }));
 
@@ -98,30 +98,27 @@ export async function POST(request) {
     const coverImage = formData.get('coverImage');
 
     // Validate required fields
-    if (!title || !genre || !priceInSats) {
+    if (!title || !priceInSats) {
       return NextResponse.json(
-        { success: false, error: 'Title, genre, and price are required' },
+        { success: false, error: 'Title and price are required' },
         { status: 400 }
       );
     }
 
     // TODO: Handle file upload for coverImage
-    // For now, we'll store a placeholder
-    let coverUrl = null;
+    let coverImageUrl = null;
     if (coverImage) {
-      // Implement file upload logic here (e.g., upload to cloud storage)
-      coverUrl = '/placeholder-cover.jpg'; // Placeholder
+      coverImageUrl = '/placeholder-cover.jpg';
     }
 
     // Create album
     const album = await prisma.album.create({
       data: {
         title,
-        genre,
-        priceSats: priceInSats,
         description,
+        priceSats: priceInSats,
         releaseDate: releaseDate ? new Date(releaseDate) : new Date(),
-        coverUrl,
+        coverImageUrl,
         artistId: decoded.artistId
       }
     });
@@ -131,7 +128,6 @@ export async function POST(request) {
       album: {
         id: album.id,
         title: album.title,
-        genre: album.genre,
         priceInSats: album.priceSats
       }
     });
