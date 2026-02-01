@@ -7,7 +7,7 @@ export default function DiscoverPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterGenre, setFilterGenre] = useState('all');
-  const [sortBy, setSortBy] = useState('recent'); // 'recent', 'popular', 'price'
+  const [sortBy, setSortBy] = useState('recent');
   const [showFilters, setShowFilters] = useState(false);
 
   const genres = ['all', 'rock', 'jazz', 'electronic', 'hip-hop', 'classical', 'indie', 'pop'];
@@ -19,9 +19,9 @@ export default function DiscoverPage() {
   const fetchAlbums = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/albums/browse');
+      const response = await fetch('/api/albums');
       const data = await response.json();
-      
+
       if (data.success) {
         setAlbums(data.albums);
       }
@@ -52,7 +52,6 @@ export default function DiscoverPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-black text-white">
-      {/* Header */}
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -78,18 +77,14 @@ export default function DiscoverPage() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Page Title */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Discover Music</h1>
           <p className="text-gray-400">Support artists directly with Lightning payments</p>
         </div>
 
-        {/* Search and Filters */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
-            {/* Search Bar */}
             <div className="flex-1 relative">
               <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
@@ -101,7 +96,6 @@ export default function DiscoverPage() {
               />
             </div>
 
-            {/* Filter Toggle Button (Mobile) */}
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="md:hidden bg-white/5 border border-white/10 rounded-lg px-4 py-3 flex items-center justify-center gap-2 hover:bg-white/10 transition"
@@ -110,7 +104,6 @@ export default function DiscoverPage() {
               Filters
             </button>
 
-            {/* Sort Dropdown */}
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -122,7 +115,6 @@ export default function DiscoverPage() {
             </select>
           </div>
 
-          {/* Genre Filter */}
           <div className={`${showFilters ? 'block' : 'hidden'} md:block`}>
             <div className="flex flex-wrap gap-2">
               {genres.map(genre => (
@@ -142,7 +134,6 @@ export default function DiscoverPage() {
           </div>
         </div>
 
-        {/* Active Filters Display */}
         {(searchQuery || filterGenre !== 'all') && (
           <div className="mb-6 flex flex-wrap gap-2">
             {searchQuery && (
@@ -164,12 +155,10 @@ export default function DiscoverPage() {
           </div>
         )}
 
-        {/* Results Count */}
         <div className="mb-4 text-gray-400 text-sm">
           {loading ? 'Loading...' : `${filteredAlbums.length} album${filteredAlbums.length !== 1 ? 's' : ''} found`}
         </div>
 
-        {/* Albums Grid */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
@@ -196,7 +185,6 @@ export default function DiscoverPage() {
                 onClick={() => handleAlbumClick(album.id)}
                 className="bg-white/5 backdrop-blur-lg rounded-xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer group hover:scale-105"
               >
-                {/* Album Cover */}
                 <div className="aspect-square bg-gradient-to-br from-purple-600/20 to-blue-600/20 relative overflow-hidden">
                   {album.coverUrl ? (
                     <img
@@ -209,7 +197,6 @@ export default function DiscoverPage() {
                       <Music className="w-16 h-16 text-white/30" />
                     </div>
                   )}
-                  {/* Play Button Overlay */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <div className="bg-purple-600 rounded-full p-4">
                       <Play className="w-8 h-8 text-white fill-white" />
@@ -217,22 +204,21 @@ export default function DiscoverPage() {
                   </div>
                 </div>
 
-                {/* Album Info */}
                 <div className="p-4">
                   <h3 className="font-bold text-lg mb-1 truncate group-hover:text-purple-400 transition">
                     {album.title}
                   </h3>
                   <p className="text-gray-400 text-sm mb-3 truncate">{album.artistName}</p>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-xs text-gray-500">
-                      {album.trackCount && (
+                      {album.trackCount > 0 && (
                         <span className="flex items-center gap-1">
                           <Music className="w-3 h-3" />
                           {album.trackCount}
                         </span>
                       )}
-                      {album.duration && (
+                      {album.duration > 0 && (
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {Math.floor(album.duration / 60)}m
@@ -245,7 +231,6 @@ export default function DiscoverPage() {
                     </div>
                   </div>
 
-                  {/* Genre Tag */}
                   {album.genre && (
                     <div className="mt-3">
                       <span className="inline-block bg-purple-500/20 text-purple-300 text-xs px-2 py-1 rounded">
@@ -260,7 +245,6 @@ export default function DiscoverPage() {
         )}
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-white/10 mt-16 py-8 bg-black/20">
         <div className="max-w-7xl mx-auto px-4 text-center text-gray-400 text-sm">
           <p>muzap.space - Support artists directly with Lightning ⚡</p>
