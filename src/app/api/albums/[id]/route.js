@@ -3,12 +3,20 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(request, { params }) {
+export async function GET(request, context) {
   try {
+    const params = await context.params;
     const { id } = params;
     
     // Convert id to integer
     const albumId = parseInt(id);
+
+    if (!albumId || isNaN(albumId)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid album ID' },
+        { status: 400 }
+      );
+    }
 
     const album = await prisma.album.findUnique({
       where: { id: albumId },
