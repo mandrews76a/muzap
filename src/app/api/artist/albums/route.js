@@ -44,7 +44,7 @@ export async function GET(request) {
     // Calculate stats
     const stats = {
       totalEarnings: albums.reduce((sum, album) => {
-        return sum + (album.priceInSats * album._count.purchases);
+        return sum + (album.priceSats * album._count.purchases);
       }, 0),
       totalSales: albums.reduce((sum, album) => sum + album._count.purchases, 0),
       totalStreams: albums.reduce((sum, album) => sum + (album.plays || 0), 0)
@@ -55,7 +55,7 @@ export async function GET(request) {
       id: album.id,
       title: album.title,
       genre: album.genre,
-      priceInSats: album.priceInSats,
+      priceInSats: album.priceSats,
       coverUrl: album.coverUrl,
       sales: album._count.purchases,
       plays: album.plays || 0,
@@ -118,7 +118,7 @@ export async function POST(request) {
       data: {
         title,
         genre,
-        priceInSats,
+        priceSats: priceInSats,
         description,
         releaseDate: releaseDate ? new Date(releaseDate) : new Date(),
         coverUrl,
@@ -132,7 +132,7 @@ export async function POST(request) {
         id: album.id,
         title: album.title,
         genre: album.genre,
-        priceInSats: album.priceInSats
+        priceInSats: album.priceSats
       }
     });
 
