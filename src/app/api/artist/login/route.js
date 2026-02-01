@@ -62,7 +62,7 @@ export async function POST(request) {
       );
     }
 
-    const validPassword = await bcrypt.compare(password, artist.passwordHash);
+    const validPassword = await bcrypt.compare(password, artist.password);
 
     if (!validPassword) {
       return NextResponse.json(
