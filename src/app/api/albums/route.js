@@ -6,19 +6,14 @@ const prisma = new PrismaClient();
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const genre = searchParams.get('genre');
     const search = searchParams.get('search');
 
     const where = {};
 
-    if (genre && genre !== 'all') {
-      where.genre = genre;
-    }
-
     if (search) {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },
-        { artist: { artistName: { contains: search, mode: 'insensitive' } } }
+        { artist: { displayName: { contains: search, mode: 'insensitive' } } }
       ];
     }
 
@@ -27,7 +22,7 @@ export async function GET(request) {
       include: {
         artist: {
           select: {
-            artistName: true
+            displayName: true
           }
         },
         _count: {
@@ -40,16 +35,14 @@ export async function GET(request) {
     const formattedAlbums = albums.map(album => ({
       id: album.id,
       title: album.title,
-      artistName: album.artist.artistName,
-      genre: album.genre,
-      priceInSats: album.priceInSats,
-      coverUrl: album.coverUrl,
+      artistName: album.artist.displayName,
+      priceInSats: album.priceSats,
+      coverUrl: album.coverImageUrl,
       description: album.description,
       releaseDate: album.releaseDate,
-      plays: album.plays || 0,
       sales: album._count.purchases,
-      trackCount: album.trackCount || 10, // Default if not set
-      duration: album.duration || 2400 // Default if not set
+      trackCount: 0,
+      duration: 0
     }));
 
     return NextResponse.json({
