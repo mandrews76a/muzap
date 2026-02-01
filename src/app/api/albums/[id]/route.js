@@ -6,13 +6,16 @@ const prisma = new PrismaClient();
 export async function GET(request, { params }) {
   try {
     const { id } = params;
+    
+    // Convert id to integer
+    const albumId = parseInt(id);
 
     const album = await prisma.album.findUnique({
-      where: { id },
+      where: { id: albumId },
       include: {
         artist: {
           select: {
-            artistName: true
+            displayName: true
           }
         },
         tracks: {
@@ -33,18 +36,17 @@ export async function GET(request, { params }) {
       album: {
         id: album.id,
         title: album.title,
-        artistName: album.artist.artistName,
-        genre: album.genre,
-        priceInSats: album.priceInSats,
-        coverUrl: album.coverUrl,
+        artistName: album.artist.displayName,
+        priceInSats: album.priceSats,
+        coverUrl: album.coverImageUrl,
         description: album.description,
         releaseDate: album.releaseDate,
-        trackCount: album.tracks.length || 10,
-        duration: album.tracks.reduce((sum, track) => sum + (track.duration || 0), 0) || 2400,
+        trackCount: album.tracks.length,
+        duration: album.tracks.reduce((sum, track) => sum + (track.durationSeconds || 0), 0),
         tracks: album.tracks.map(track => ({
           id: track.id,
           title: track.title,
-          duration: track.duration || 240,
+          duration: track.durationSeconds,
           trackNumber: track.trackNumber
         }))
       }
