@@ -1,8 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Music, Search, Zap, Play, Clock, TrendingUp, Filter, X } from 'lucide-react';
 
 export default function DiscoverPage() {
+  const router = useRouter();
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,7 +49,13 @@ export default function DiscoverPage() {
     });
 
   const handleAlbumClick = (albumId) => {
-    window.location.href = `/album/${albumId}`;
+    router.push(`/album/${albumId}`);
+  };
+
+  const handleArtistClick = (e, artistName, artistSlug) => {
+    e.stopPropagation();
+    const slug = artistSlug || artistName.toLowerCase().replace(/\s+/g, '-');
+    router.push(`/artist/${slug}`);
   };
 
   return (
@@ -55,19 +63,19 @@ export default function DiscoverPage() {
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center cursor-pointer" onClick={() => window.location.href = '/'}>
+            <div className="flex items-center cursor-pointer" onClick={() => router.push('/')}>
               <Music className="w-8 h-8 text-purple-400" />
               <span className="text-2xl font-bold ml-2">muzap</span>
             </div>
             <div className="flex items-center gap-4">
               <button
-                onClick={() => window.location.href = '/artist/login'}
+                onClick={() => router.push('/artist/login')}
                 className="text-gray-300 hover:text-white transition"
               >
                 Artist Login
               </button>
               <button
-                onClick={() => window.location.href = '/artist/signup'}
+                onClick={() => router.push('/artist/signup')}
                 className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg font-medium transition"
               >
                 Join as Artist
@@ -208,7 +216,12 @@ export default function DiscoverPage() {
                   <h3 className="font-bold text-lg mb-1 truncate group-hover:text-purple-400 transition">
                     {album.title}
                   </h3>
-                  <p className="text-gray-400 text-sm mb-3 truncate">{album.artistName}</p>
+                  <p 
+                    className="text-purple-400 hover:text-purple-300 text-sm mb-3 truncate cursor-pointer transition"
+                    onClick={(e) => handleArtistClick(e, album.artistName, album.artistSlug)}
+                  >
+                    {album.artistName}
+                  </p>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-xs text-gray-500">

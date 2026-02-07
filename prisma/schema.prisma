@@ -21,8 +21,13 @@ model Artist {
   email             String   @unique
   password          String?
   displayName       String
+  slug              String?  @unique
   bio               String?
   avatarUrl         String?
+  bannerUrl         String?
+  websiteUrl        String?
+  twitterUrl        String?
+  instagramUrl      String?
   nostrPubkey       String?  @unique
   lightningAddress  String?
   createdAt         DateTime @default(now())
