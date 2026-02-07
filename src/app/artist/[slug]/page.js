@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Music, Globe, Twitter, Instagram, Key, Zap, Calendar, ExternalLink, ArrowLeft } from 'lucide-react';
+import { Music, Globe, Twitter, Instagram, Key, Zap, Calendar, ArrowLeft } from 'lucide-react';
 
 export default function ArtistProfilePage() {
   const params = useParams();
@@ -63,7 +63,6 @@ export default function ArtistProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-black text-white">
-      {/* Header */}
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-lg sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -82,7 +81,6 @@ export default function ArtistProfilePage() {
         </div>
       </header>
 
-      {/* Banner */}
       <div className="relative h-64 bg-gradient-to-r from-purple-600 to-blue-600 overflow-hidden">
         {artist.bannerUrl ? (
           <img
@@ -95,10 +93,8 @@ export default function ArtistProfilePage() {
         )}
       </div>
 
-      {/* Profile Content */}
       <div className="max-w-7xl mx-auto px-4 -mt-20 relative z-10">
         <div className="flex flex-col md:flex-row gap-8 mb-8">
-          {/* Avatar */}
           <div className="flex-shrink-0">
             <div className="w-40 h-40 rounded-full border-4 border-black bg-gradient-to-br from-purple-600 to-blue-600 overflow-hidden">
               {artist.avatarUrl ? (
@@ -115,7 +111,6 @@ export default function ArtistProfilePage() {
             </div>
           </div>
 
-          {/* Artist Info */}
           <div className="flex-1">
             <h1 className="text-4xl font-bold mb-2">{artist.displayName}</h1>
             <p className="text-gray-400 mb-4">{albums.length} album{albums.length !== 1 ? 's' : ''}</p>
@@ -124,7 +119,6 @@ export default function ArtistProfilePage() {
               <p className="text-gray-300 mb-6 max-w-2xl">{artist.bio}</p>
             )}
 
-            {/* Social Links */}
             <div className="flex flex-wrap gap-3">
               {artist.websiteUrl && (
                 
@@ -175,7 +169,6 @@ export default function ArtistProfilePage() {
           </div>
         </div>
 
-        {/* Albums Section */}
         <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 mb-8">
           <h2 className="text-2xl font-bold mb-6">Albums</h2>
           
