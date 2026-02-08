@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Music, Zap, Plus, Upload, Edit, Trash2, Eye, TrendingUp, DollarSign, LogOut } from 'lucide-react';
+import { Music, Zap, Plus, Upload, Edit, Trash2, Eye, TrendingUp, DollarSign, LogOut, Settings } from 'lucide-react';
 
 export default function ArtistDashboard() {
   const router = useRouter();
@@ -175,6 +175,13 @@ export default function ArtistDashboard() {
                 className="text-gray-300 hover:text-white transition"
               >
                 Browse Music
+              </button>
+              <button
+                onClick={() => router.push('/artist/settings')}
+                className="flex items-center gap-2 text-gray-300 hover:text-white transition"
+              >
+                <Settings className="w-4 h-4" />
+                Settings
               </button>
               <button
                 onClick={handleLogout}
