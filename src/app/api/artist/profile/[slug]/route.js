@@ -15,11 +15,18 @@ export async function GET(request, context) {
       );
     }
 
-    // Find artist by slug or displayName (fallback for artists without slugs)
+    // Convert slug back to potential display name (e.g., "test-artist" -> "Test Artist")
+    const potentialDisplayName = slug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+    // Find artist by slug or displayName (case insensitive)
     const artist = await prisma.artist.findFirst({
       where: {
         OR: [
           { slug: slug },
+          { displayName: { equals: potentialDisplayName, mode: 'insensitive' } },
           { displayName: { equals: slug, mode: 'insensitive' } }
         ]
       }
