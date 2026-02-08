@@ -54,7 +54,7 @@ export default function ArtistProfilePage() {
             onClick={() => router.push('/discover')}
             className="text-purple-400 hover:text-purple-300"
           >
-            ← Back to discover
+            Back to discover
           </button>
         </div>
       </div>
@@ -85,7 +85,7 @@ export default function ArtistProfilePage() {
         {artist.bannerUrl ? (
           <img
             src={artist.bannerUrl}
-            alt={`${artist.displayName} banner`}
+            alt="Banner"
             className="w-full h-full object-cover"
           />
         ) : (
@@ -113,7 +113,7 @@ export default function ArtistProfilePage() {
 
           <div className="flex-1">
             <h1 className="text-4xl font-bold mb-2">{artist.displayName}</h1>
-            <p className="text-gray-400 mb-4">{albums.length} album{albums.length !== 1 ? 's' : ''}</p>
+            <p className="text-gray-400 mb-4">{albums.length} albums</p>
             
             {artist.bio && (
               <p className="text-gray-300 mb-6 max-w-2xl">{artist.bio}</p>
@@ -121,37 +121,31 @@ export default function ArtistProfilePage() {
 
             <div className="flex flex-wrap gap-3">
               {artist.websiteUrl && (
-                
-                  href={artist.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => window.open(artist.websiteUrl, '_blank')}
                   className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition"
                 >
                   <Globe className="w-4 h-4" />
                   Website
-                </a>
+                </button>
               )}
               {artist.twitterUrl && (
-                
-                  href={artist.twitterUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => window.open(artist.twitterUrl, '_blank')}
                   className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition"
                 >
                   <Twitter className="w-4 h-4" />
                   Twitter
-                </a>
+                </button>
               )}
               {artist.instagramUrl && (
-                
-                  href={artist.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => window.open(artist.instagramUrl, '_blank')}
                   className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition"
                 >
                   <Instagram className="w-4 h-4" />
                   Instagram
-                </a>
+                </button>
               )}
               {artist.nostrPubkey && (
                 <div className="flex items-center gap-2 bg-purple-500/20 border border-purple-500/50 px-4 py-2 rounded-lg">
