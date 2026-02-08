@@ -41,7 +41,8 @@ model Album {
   title           String
   description     String?
   coverImageUrl   String?
-  priceSats       Int
+  priceUsd        Float    @default(0)
+  priceSats       Int?
   releaseDate     DateTime
   nostrEventId    String?
   createdAt       DateTime @default(now())
@@ -57,6 +58,7 @@ model Track {
   durationSeconds Int
   audioUrl        String
   trackNumber     Int
+  priceUsd        Float?
   priceSats       Int?
   nostrEventId    String?
   createdAt       DateTime @default(now())

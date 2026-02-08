@@ -202,9 +202,8 @@ export default function ArtistProfilePage() {
                         <Calendar className="w-3 h-3" />
                         {new Date(album.releaseDate).getFullYear()}
                       </span>
-                      <span className="flex items-center gap-1 text-yellow-400 font-bold">
-                        <Zap className="w-4 h-4 fill-yellow-400" />
-                        {album.priceInSats}
+                      <span className="text-green-400 font-bold text-sm">
+                        ${album.priceUsd?.toFixed(2)}
                       </span>
                     </div>
                   </div>

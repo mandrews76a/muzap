@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { usdToSats } from '@/lib/exchangeRate';
 
 const prisma = new PrismaClient();
 
@@ -32,18 +33,19 @@ export async function GET(request) {
       orderBy: { createdAt: 'desc' }
     });
 
-    const formattedAlbums = albums.map(album => ({
+    const formattedAlbums = await Promise.all(albums.map(async (album) => ({
       id: album.id,
       title: album.title,
       artistName: album.artist.displayName,
-      priceInSats: album.priceSats,
+      priceUsd: album.priceUsd,
+      priceInSats: await usdToSats(album.priceUsd),
       coverUrl: album.coverImageUrl,
       description: album.description,
       releaseDate: album.releaseDate,
       sales: album._count.purchases,
       trackCount: 0,
       duration: 0
-    }));
+    })));
 
     return NextResponse.json({
       success: true,

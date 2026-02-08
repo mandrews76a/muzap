@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { usdToSats } from '@/lib/exchangeRate';
 
 const prisma = new PrismaClient();
 
@@ -39,13 +40,16 @@ export async function GET(request, context) {
       );
     }
 
+    const priceInSats = await usdToSats(album.priceUsd);
+
     return NextResponse.json({
       success: true,
       album: {
         id: album.id,
         title: album.title,
         artistName: album.artist.displayName,
-        priceInSats: album.priceSats,
+        priceUsd: album.priceUsd,
+        priceInSats,
         coverUrl: album.coverImageUrl,
         description: album.description,
         releaseDate: album.releaseDate,

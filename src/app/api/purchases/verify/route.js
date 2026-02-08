@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { verifyToken } from '@/lib/auth';
 import { verifyPayment } from '@/lib/lightning';
+import { usdToSats } from '@/lib/exchangeRate';
 
 const prisma = new PrismaClient();
 
@@ -39,7 +40,7 @@ export async function POST(request) {
         userId: decoded.userId,
         albumId: parseInt(albumId),
         paymentHash: paymentHash,
-        amountSats: album.priceSats
+        amountSats: await usdToSats(album.priceUsd)
       }
     });
 

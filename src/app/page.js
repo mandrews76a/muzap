@@ -116,7 +116,7 @@ export default function HomePage() {
                 </li>
                 <li className="flex gap-3">
                   <span className="font-bold text-blue-400">2.</span>
-                  <span>Upload your albums and set your price in sats</span>
+                  <span>Upload your albums and set your price in USD</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="font-bold text-blue-400">3.</span>

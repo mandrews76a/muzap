@@ -17,7 +17,7 @@ export default function ArtistDashboard() {
   const [uploadForm, setUploadForm] = useState({
     title: '',
     genre: '',
-    priceInSats: '',
+    priceUsd: '',
     description: '',
     releaseDate: '',
     coverImage: null
@@ -88,7 +88,7 @@ export default function ArtistDashboard() {
       const formData = new FormData();
       formData.append('title', uploadForm.title);
       formData.append('genre', uploadForm.genre);
-      formData.append('priceInSats', uploadForm.priceInSats);
+      formData.append('priceUsd', uploadForm.priceUsd);
       formData.append('description', uploadForm.description);
       formData.append('releaseDate', uploadForm.releaseDate);
       if (uploadForm.coverImage) {
@@ -110,7 +110,7 @@ export default function ArtistDashboard() {
         setUploadForm({
           title: '',
           genre: '',
-          priceInSats: '',
+          priceUsd: '',
           description: '',
           releaseDate: '',
           coverImage: null
@@ -293,9 +293,12 @@ export default function ArtistDashboard() {
                       <div className="text-xs text-gray-500">
                         {album.sales || 0} sales
                       </div>
-                      <div className="flex items-center gap-1 text-yellow-400 font-bold text-sm">
-                        <Zap className="w-4 h-4 fill-yellow-400" />
-                        {album.priceInSats}
+                      <div className="flex items-center gap-1 text-green-400 font-bold text-sm">
+                        <DollarSign className="w-4 h-4" />
+                        {album.priceUsd?.toFixed(2)}
+                        <span className="text-xs text-gray-500 font-normal ml-1">
+                          (~{album.priceInSats?.toLocaleString()} sats)
+                        </span>
                       </div>
                     </div>
 
@@ -367,15 +370,17 @@ export default function ArtistDashboard() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Price (in sats)</label>
+                <label className="block text-sm font-medium mb-2">Price (USD)</label>
                 <div className="relative">
-                  <Zap className="w-5 h-5 text-yellow-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <DollarSign className="w-5 h-5 text-green-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="number"
-                    name="priceInSats"
-                    value={uploadForm.priceInSats}
+                    step="0.01"
+                    min="0"
+                    name="priceUsd"
+                    value={uploadForm.priceUsd}
                     onChange={handleUploadFormChange}
-                    placeholder="21000"
+                    placeholder="9.99"
                     className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>

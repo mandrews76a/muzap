@@ -71,8 +71,7 @@ export default function AlbumDetailPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          albumId: album.id,
-          amountInSats: album.priceInSats
+          albumId: album.id
         })
       });
 
@@ -221,9 +220,14 @@ export default function AlbumDetailPage() {
               <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-gray-400">Album Price</span>
-                  <div className="flex items-center gap-2 text-2xl font-bold text-yellow-400">
-                    <Zap className="w-6 h-6 fill-yellow-400" />
-                    {album.priceInSats.toLocaleString()} sats
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-green-400">
+                      ${album.priceUsd?.toFixed(2)}
+                    </div>
+                    <div className="flex items-center gap-1 text-sm text-yellow-400 justify-end">
+                      <Zap className="w-4 h-4 fill-yellow-400" />
+                      ~{album.priceInSats?.toLocaleString()} sats
+                    </div>
                   </div>
                 </div>
                 <button
@@ -305,9 +309,11 @@ export default function AlbumDetailPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Price</span>
-                    <div className="flex items-center gap-1 text-yellow-400 font-bold">
-                      <Zap className="w-4 h-4 fill-yellow-400" />
-                      {album.priceInSats.toLocaleString()} sats
+                    <div className="text-right">
+                      <span className="text-green-400 font-bold">${album.priceUsd?.toFixed(2)}</span>
+                      <span className="text-xs text-yellow-400 ml-2">
+                        (~{album.priceInSats?.toLocaleString()} sats)
+                      </span>
                     </div>
                   </div>
                 </div>

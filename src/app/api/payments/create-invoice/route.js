@@ -1,16 +1,17 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { usdToSats } from '@/lib/exchangeRate';
 
 const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { albumId, amountInSats } = body;
+    const { albumId } = body;
 
-    if (!albumId || !amountInSats) {
+    if (!albumId) {
       return NextResponse.json(
-        { success: false, error: 'Album ID and amount required' },
+        { success: false, error: 'Album ID is required' },
         { status: 400 }
       );
     }
@@ -27,9 +28,12 @@ export async function POST(request) {
       );
     }
 
+    // Calculate sats from the album's USD price at time of purchase
+    const amountInSats = await usdToSats(album.priceUsd);
+
     // TODO: Implement actual Alby Lightning invoice creation
     // For now, create a mock invoice and simulate payment
-    
+
     const invoice = {
       paymentRequest: 'lnbc' + Math.random().toString(36).substring(2, 15),
       paymentHash: Math.random().toString(36).substring(2, 15),

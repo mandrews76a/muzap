@@ -44,7 +44,7 @@ export default function DiscoverPage() {
     .sort((a, b) => {
       if (sortBy === 'recent') return new Date(b.createdAt) - new Date(a.createdAt);
       if (sortBy === 'popular') return (b.plays || 0) - (a.plays || 0);
-      if (sortBy === 'price') return a.priceInSats - b.priceInSats;
+      if (sortBy === 'price') return (a.priceUsd || 0) - (b.priceUsd || 0);
       return 0;
     });
 
@@ -238,9 +238,12 @@ export default function DiscoverPage() {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 text-yellow-400 font-bold">
-                      <Zap className="w-4 h-4 fill-yellow-400" />
-                      <span>{album.priceInSats || 1000}</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-green-400 font-bold">${album.priceUsd?.toFixed(2) || '0.00'}</span>
+                      <span className="text-xs text-gray-500 ml-1 flex items-center gap-0.5">
+                        <Zap className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                        {(album.priceInSats || 0).toLocaleString()}
+                      </span>
                     </div>
                   </div>
 

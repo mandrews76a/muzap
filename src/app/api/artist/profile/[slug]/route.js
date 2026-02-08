@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { usdToSats } from '@/lib/exchangeRate';
 
 const prisma = new PrismaClient();
 
@@ -47,7 +48,7 @@ export async function GET(request, context) {
         id: true,
         title: true,
         coverImageUrl: true,
-        priceSats: true,
+        priceUsd: true,
         releaseDate: true
       }
     });
@@ -68,13 +69,14 @@ export async function GET(request, context) {
         nostrPubkey: artist.nostrPubkey,
         lightningAddress: artist.lightningAddress
       },
-      albums: albums.map(album => ({
+      albums: await Promise.all(albums.map(async (album) => ({
         id: album.id,
         title: album.title,
         coverUrl: album.coverImageUrl,
-        priceInSats: album.priceSats,
+        priceUsd: album.priceUsd,
+        priceInSats: await usdToSats(album.priceUsd),
         releaseDate: album.releaseDate
-      }))
+      })))
     });
 
   } catch (error) {
