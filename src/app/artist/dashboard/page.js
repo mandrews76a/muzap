@@ -22,6 +22,14 @@ export default function ArtistDashboard() {
     releaseDate: '',
     coverImage: null
   });
+  const [editingAlbum, setEditingAlbum] = useState(null);
+  const [editForm, setEditForm] = useState({
+    title: '',
+    genre: '',
+    priceUsd: '',
+    description: '',
+    releaseDate: '',
+  });
 
   useEffect(() => {
     loadDashboardData();
@@ -127,7 +135,7 @@ export default function ArtistDashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      
+
       const response = await fetch(`/api/artist/albums/${albumId}`, {
         method: 'DELETE',
         headers: {
@@ -142,6 +150,55 @@ export default function ArtistDashboard() {
       }
     } catch (error) {
       console.error('Delete error:', error);
+    }
+  };
+
+  const handleEditClick = (album) => {
+    setEditingAlbum(album);
+    setEditForm({
+      title: album.title || '',
+      genre: album.genre || '',
+      priceUsd: album.priceUsd?.toString() || '',
+      description: album.description || '',
+      releaseDate: album.releaseDate ? new Date(album.releaseDate).toISOString().split('T')[0] : '',
+    });
+  };
+
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm({
+      ...editForm,
+      [name]: value
+    });
+  };
+
+  const handleEditAlbum = async () => {
+    try {
+      const token = localStorage.getItem('token');
+
+      const formData = new FormData();
+      formData.append('title', editForm.title);
+      formData.append('genre', editForm.genre);
+      formData.append('priceUsd', editForm.priceUsd);
+      formData.append('description', editForm.description);
+      formData.append('releaseDate', editForm.releaseDate);
+
+      const response = await fetch(`/api/artist/albums/${editingAlbum.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setEditingAlbum(null);
+        loadDashboardData();
+      }
+    } catch (error) {
+      console.error('Edit error:', error);
     }
   };
 
@@ -311,7 +368,7 @@ export default function ArtistDashboard() {
                         View
                       </button>
                       <button
-                        onClick={() => alert('Edit functionality coming soon!')}
+                        onClick={() => handleEditClick(album)}
                         className="flex-1 bg-white/5 hover:bg-white/10 py-2 rounded-lg transition text-sm flex items-center justify-center gap-1"
                       >
                         <Edit className="w-4 h-4" />
@@ -336,7 +393,7 @@ export default function ArtistDashboard() {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-gradient-to-br from-purple-900/90 to-blue-900/90 rounded-2xl p-8 max-w-2xl w-full border border-white/20 max-h-[90vh] overflow-y-auto">
             <h3 className="text-3xl font-bold mb-6">Upload New Album</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Album Title</label>
@@ -445,6 +502,102 @@ export default function ArtistDashboard() {
                 className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 rounded-lg transition"
               >
                 Upload Album
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editingAlbum && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-gradient-to-br from-purple-900/90 to-blue-900/90 rounded-2xl p-8 max-w-2xl w-full border border-white/20 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-3xl font-bold mb-6">Edit Album</h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Album Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={editForm.title}
+                  onChange={handleEditFormChange}
+                  placeholder="Enter album title"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Genre</label>
+                <select
+                  name="genre"
+                  value={editForm.genre}
+                  onChange={handleEditFormChange}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="">Select genre</option>
+                  <option value="rock">Rock</option>
+                  <option value="jazz">Jazz</option>
+                  <option value="electronic">Electronic</option>
+                  <option value="hip-hop">Hip-Hop</option>
+                  <option value="classical">Classical</option>
+                  <option value="indie">Indie</option>
+                  <option value="pop">Pop</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Price (USD)</label>
+                <div className="relative">
+                  <DollarSign className="w-5 h-5 text-green-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    name="priceUsd"
+                    value={editForm.priceUsd}
+                    onChange={handleEditFormChange}
+                    placeholder="9.99"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Description</label>
+                <textarea
+                  name="description"
+                  value={editForm.description}
+                  onChange={handleEditFormChange}
+                  placeholder="Tell listeners about your album..."
+                  rows="4"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Release Date</label>
+                <input
+                  type="date"
+                  name="releaseDate"
+                  value={editForm.releaseDate}
+                  onChange={handleEditFormChange}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={() => setEditingAlbum(null)}
+                className="flex-1 bg-white/5 hover:bg-white/10 text-white py-3 rounded-lg transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEditAlbum}
+                className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 rounded-lg transition"
+              >
+                Save Changes
               </button>
             </div>
           </div>

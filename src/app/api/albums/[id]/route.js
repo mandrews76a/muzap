@@ -48,6 +48,7 @@ export async function GET(request, context) {
         id: album.id,
         title: album.title,
         artistName: album.artist.displayName,
+        genre: album.genre,
         priceUsd: album.priceUsd,
         priceInSats,
         coverUrl: album.coverImageUrl,

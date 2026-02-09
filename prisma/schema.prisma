@@ -41,6 +41,7 @@ model Album {
   title           String
   description     String?
   coverImageUrl   String?
+  genre           String?
   priceUsd        Float    @default(0)
   priceSats       Int?
   releaseDate     DateTime

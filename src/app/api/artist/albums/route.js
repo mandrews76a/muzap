@@ -38,6 +38,7 @@ export async function GET(request) {
       id: album.id,
       title: album.title,
       artistName: album.artist.displayName,
+      genre: album.genre,
       priceUsd: album.priceUsd,
       priceInSats: await usdToSats(album.priceUsd),
       coverUrl: album.coverImageUrl,
@@ -76,6 +77,7 @@ export async function POST(request) {
 
     const formData = await request.formData();
     const title = formData.get('title');
+    const genre = formData.get('genre');
     const priceUsd = parseFloat(formData.get('priceUsd'));
     const description = formData.get('description');
     const releaseDate = formData.get('releaseDate');
@@ -91,6 +93,7 @@ export async function POST(request) {
       data: {
         artistId: decoded.artistId,
         title,
+        genre: genre || null,
         priceUsd,
         description: description || null,
         releaseDate: releaseDate ? new Date(releaseDate) : new Date(),
